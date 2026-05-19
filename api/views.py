@@ -93,8 +93,8 @@ def studentsDetailView(request, pk):
 #         employee.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# Using mixins and generics from same Employee views
-
+# Using mixins from same Employee views
+"""
 class Employees(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
@@ -117,3 +117,13 @@ class EmployeeDetail(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.De
 
     def delete(self, request, pk):
         return self.destroy(request, pk)
+"""
+class Employees(generics.ListCreateAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+# Generics, PK basesd operations
+class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    lookup_field = 'pk' # This tells the view to use the 'pk' field to look up the Employee object. By default, generics.RetrieveAPIView uses 'pk' as the lookup field, so this line is actually optional in this case. However, if you wanted to use a different field (e.g., 'emp_id'), you would set lookup_field = 'emp_id'.
