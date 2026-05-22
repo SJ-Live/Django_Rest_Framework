@@ -11,6 +11,8 @@ from Employees.models import Employee
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins, generics, viewsets
+from blogs.models import Blog, Comment
+from blogs.serializers import BlogSerializer, CommentSerializer
 # Create your views here.
 
 @api_view(['GET','POST']) # This decorator is used to specify that the studentsView function should only handle defined requests. If a different type of request is made to this view, it will return a 405 Method Not Allowed response.
@@ -133,33 +135,55 @@ class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
 
 """
 
-class EmployeeViewset(viewsets.ViewSet):
-    def list(self, request):
-        qweryset = Employee.objects.all()
-        serializer = EmployeeSerializer(qweryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+# class EmployeeViewset(viewsets.ViewSet):
+#     def list(self, request):
+#         qweryset = Employee.objects.all()
+#         serializer = EmployeeSerializer(qweryset, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def create(self, request):
-        serializer = EmployeeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def create(self, request):
+#         serializer = EmployeeSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def retrieve(self, request, pk=None):
-        employee = get_object_or_404(Employee, pk=pk)
-        serializer = EmployeeSerializer(employee)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#     def retrieve(self, request, pk=None):
+#         employee = get_object_or_404(Employee, pk=pk)
+#         serializer = EmployeeSerializer(employee)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def update(self, request, pk=None):
-        employee = get_object_or_404(Employee, pk=pk)
-        serializer  = EmployeeSerializer(employee, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def update(self, request, pk=None):
+#         employee = get_object_or_404(Employee, pk=pk)
+#         serializer  = EmployeeSerializer(employee, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def destroy(self, request, pk=None):
-        employee = get_object_or_404(Employee, pk=pk)
-        employee.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     def destroy(self, request, pk=None):
+#         employee = get_object_or_404(Employee, pk=pk)
+#         employee.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class EmployeeViewset(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+class BlogViewset(generics.ListCreateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+class CommentViewset(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    lookup_field = 'pk'
+
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    lookup_field = 'pk'
