@@ -125,3 +125,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Below setting is used for global pagination, means, it will applied for all the views if not defined otherwise in custom pagination   
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination', # another one is rest_framework.pagination.PageNumberPagination
+    'PAGE_SIZE': 2,
+}

@@ -13,6 +13,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import mixins, generics, viewsets
 from blogs.models import Blog, Comment
 from blogs.serializers import BlogSerializer, CommentSerializer
+from .paginations import CustomPagination
 # Create your views here.
 
 @api_view(['GET','POST']) # This decorator is used to specify that the studentsView function should only handle defined requests. If a different type of request is made to this view, it will return a 405 Method Not Allowed response.
@@ -169,6 +170,7 @@ class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
 class EmployeeViewset(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    pagination_class = CustomPagination
 
 class BlogViewset(generics.ListCreateAPIView):
     queryset = Blog.objects.all()
