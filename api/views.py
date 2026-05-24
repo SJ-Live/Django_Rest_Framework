@@ -14,6 +14,9 @@ from rest_framework import mixins, generics, viewsets
 from blogs.models import Blog, Comment
 from blogs.serializers import BlogSerializer, CommentSerializer
 from .paginations import CustomPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+from .filters import EmployeeFilter
 # Create your views here.
 
 @api_view(['GET','POST']) # This decorator is used to specify that the studentsView function should only handle defined requests. If a different type of request is made to this view, it will return a 405 Method Not Allowed response.
@@ -171,10 +174,14 @@ class EmployeeViewset(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     pagination_class = CustomPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = EmployeeFilter
 
 class BlogViewset(generics.ListCreateAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['blog_title', 'blog_body']
 
 class CommentViewset(generics.ListCreateAPIView):
     queryset = Comment.objects.all()

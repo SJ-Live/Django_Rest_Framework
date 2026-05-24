@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 
 class CustomPagination(PageNumberPagination):
-    page_size = 1 # Detemines the number of records to be shown per page
+    page_size = 4 # Detemines the number of records to be shown per page
     page_size_query_param = 'page_size'
     page_query_param = 'page-num'
     max_page_size = 1
@@ -14,5 +14,5 @@ class CustomPagination(PageNumberPagination):
             'previous':self.get_previous_link(),
             'count': self.page.paginator.count,
             'page_size': self.page_size,
-            'result':data
+            'results':data
         })
